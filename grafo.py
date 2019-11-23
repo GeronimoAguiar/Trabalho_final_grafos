@@ -52,8 +52,8 @@ def calcSTP(w,i,j,m):
   if m == 1: return w[i,j]
   c = math.inf
   for k in range(len(w)):
-    if c > (calcSTP(w,k,j,m-1) + w[k,j]):
-      c = calcSTP(w,k,j,m-1) + w[k,j]
+    if c > (calcSTP(w,i,k,m-1) + w[k,j]):
+      c = calcSTP(w,i,k,m-1) + w[k,j]
   return c
 
 
@@ -68,27 +68,28 @@ def menorRecSTP(w):
 
 def STP(l, w):
   nVertices = len(w)
-  l2 = np.zeros( (nVertices,nVertices) )
-  for i in range(0,nVertices):
-    for j in range(0,nVertices):
-      if i != j:
-        l2[i,j] = math.inf
-
+  l2 = w.copy()
   for i in range(nVertices):
     for j in range(nVertices):
-      c = math.inf
+      if i != j:
+        l2[i,j] = math.inf
+      else:
+        l2[i,j] = 0
+  for i in range(nVertices):
+    for j in range(nVertices):
+      c = l[i,j]
       for k in range(nVertices):
-        if c > (l[i,k] + w[k,i]):
-          c = l[i,k] + w[k,i]
-    l2[i,j] = c
+        if c > (l[i,k] + l[k,j]):
+          c = l[i,k] + l[k,j]
+      l[i,j] = c
 
-  return l2    
+  return l    
 
 
 def mainSTP(w):
   l = w.copy()
-  for i in range(1, len(w)):
-    l = STP(l,w)
+  for i in range(len(w)):
+    l = STP(l,l)
   print("mainSTP")
   print(l)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -210,5 +211,6 @@ print("\n")
 #mainSTP(w)
 #3-
 #fordfulkerson(w,0,4)
-print(bellman_ford(w,0))
-
+#print(bellman_ford(w,0))
+menorRecSTP(w)
+mainSTP(w)
