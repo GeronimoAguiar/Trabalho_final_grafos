@@ -32,7 +32,7 @@ def matrizPesos():
 #>>>>>>>>>>>>>>>>>>>>>>Floyed-WarShall<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def floydWarshall(w):
-  d = w
+  d = w.copy()
   n = len(w)
 
   for k in range(n):
@@ -40,6 +40,7 @@ def floydWarshall(w):
       for j in range(n):
         if (d[i,j] > (d[i,k] + d[k,j])):
           d[i,j] = d[i,k] + d[k,j]
+  print("floydWarshall")
   print(d)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -57,11 +58,12 @@ def calcSTP(w,i,j,m):
 
 
 def menorRecSTP(w):
-  l = w
+  l = w.copy()
   for i in range(len(w)):
     for j in range(len(w)):
       l[i,j] = calcSTP(w,i,j,len(w))
-  return l
+  print("menorRecSTP")
+  print(l)
 
 
 def STP(l, w):
@@ -84,9 +86,10 @@ def STP(l, w):
 
 
 def mainSTP(w):
-  l = w
+  l = w.copy()
   for i in range(1, len(w)):
     l = STP(l,w)
+  print("mainSTP")
   print(l)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -162,5 +165,6 @@ print("\n")
 floydWarshall(w)
 #2-
 mainSTP(w)
+menorRecSTP(w)
 #3-
-fordfulkerson(w,0,4)
+fordfulkerson(w,0,5)
