@@ -7,30 +7,29 @@
                       SAMUEL HERICLES - 389118
                       GERÔNIMO AGUIAR - 385145
                       PEDRO RENOIR    - 389113
+   
+  Parte 1 -> Algoritmos de caminhos mínimos para todos os vértices
 
-    Objetivo -> 
-    
-    Parte 1 ->
-      Implementar os algoritmos de menores caminhos dentre todos os pares de
-    vértices apresentados em sala. Cada algoritmo deve imprimir a matriz de
-    menores caminhos e os menores a partir de vértice fixo fornecido como 
-    entrada. Caso seu grafo tenha circuito negativo, seu algoritmo deverá
-    ser capaz de identificar a sua existência.
+    Implementar os algoritmos de menores caminhos dentre todos os pares de
+  vértices apresentados em sala. Cada algoritmo deve imprimir a matriz de
+  menores caminhos e os menores a partir de vértice fixo fornecido como 
+  entrada. Caso seu grafo tenha circuito negativo, seu algoritmo deverá
+  ser capaz de identificar a sua existência.
 
-    Parte 2 ->
+  Parte 2 -> Algoritmos de fluxo máximo
 
-      Considere os seguintes algoritmos para resolver o problema de fluxo
-    máximo:
+    Considere os seguintes algoritmos para resolver o problema de fluxo
+  máximo:
 
-      • Ford-Fulkerson;
-      • Push–relabel maximum flow algorithm.
+    • Ford-Fulkerson;
+    • Push–relabel maximum flow algorithm.
 
-      Implemente os algoritmos acima. Utilizando a ideia por trás de cada
-    algoritmo acima, implemente uma forma eficiente, para cada algoritmo, de
-    encontrar o corte mínimo do grafo fornecido. Seu algorítimo deverá 
-    receber um grafo orientado com vértices fonte e sorvedouro explicitados
-    e então retornar a função fluxo máximo para o grafo e as arestas que
-    pertencem ao corte máximo.
+    Implemente os algoritmos acima. Utilizando a ideia por trás de cada
+  algoritmo acima, implemente uma forma eficiente, para cada algoritmo, de
+  encontrar o corte mínimo do grafo fornecido. Seu algorítimo deverá 
+  receber um grafo orientado com vértices fonte e sorvedouro explicitados
+  e então retornar a função fluxo máximo para o grafo e as arestas que
+  pertencem ao corte máximo.
 
 '''
 
@@ -43,10 +42,36 @@ import numpy as np
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>Carregar Matriz de Pesos<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+'''
+@brief  Carrega a matriz de peso no qual se refere ao grafo que 
+        será analisado.
+        
+        Exemplo:
+          
+                             _0____1____2_
+                          0 | 0    1    1 | 
+                          1 | inf  0    1 |
+                          2 | 1   inf   0 |
+      
+      Esta matriz é interpretada assim:
+        - A caminho do vértice 0->1 com peso 1
+        - A caminho do vértice 0->2 com peso 1
+        - A caminho do vértice 2->0 com peso 1
+        - A caminho do vértice 1->1 com peso 1
+        - Não há caminho do vértice 1->0 pois o peso é infinito
+
+@return A matriz de pesos que representa o grafo direcionado.
+
+'''
+
 def matrizPesos():
-  arquivo = open("grafo_wiki.txt","r")    
+  # Carrega o arquivo localizado na pasta 'exemplo_de_grafos'
+  arquivo = open("exemplo_de_grafos/grafo_youtube.txt","r")    
   texto = arquivo.readlines()
   arquivo.close()
+
+  # Trata os dados do arquivos
   nVertices = int(texto[0].split()[0])
   vPai = int(texto[1].split()[0])
 
@@ -73,12 +98,16 @@ def matrizPesos():
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 '''
-  Busca em profunidade para usar no algoritmo de ford-
-fulkerson, com ela podemos encontrar os pais do vértice
-raiz e poder realizar a busca pelo o menor caminho.
+  @brief  Busca em profunidade para usar no algoritmo de ford-fulkerson,
+          com ela podemos encontrar os pais do vértice raiz e poder realizar
+          a busca pelo o menor caminho.
+
+  @param[in] w Matriz de pesos que representa o grafo direcionado.
+  @param[in] s Vértice raiz por onde a busca em profundidade irá percorrer.
+
+  @return Vetor de descendência do vértice raiz ao mais profundo.
 
 '''
-
 def busca_em_profundidade(w,s):
   n = len(w)
   a = 0
@@ -88,6 +117,23 @@ def busca_em_profundidade(w,s):
 
   return pai
 
+
+'''
+  @brief  BP_VISIT função no qual percorre cada vértice da aresta, armazena
+          no vetor 'pai' de descendência e 'colore' o vetor 'cor' com preto ou
+          cinza.
+
+  @param[in] w   Matriz de pesos que representa o grafo direcionado.
+  @param[in] i   Vértice no qual será verificado para ver seus descendentes.
+  @param[in] pai Vetor que irá armazenar a descendência ao vértice raiz.
+  @param[in] cor Vetor que irá mostrar um determinado vértices está percorrido
+                 ou não, onde '0' representa a cor branca que indica que o vértice
+                 não foi percorrido, '-1' representa a cor cinza que indica que o
+                 vértice entrou em análise mas seus filhos não e '1' que representa
+                 a cor preta que indica que o vértice já foi verifica junto com seus
+                 descendentes.
+  
+'''
 def BP_VISIT(w,i,pai,cor):
   
   n = len(w)
@@ -353,9 +399,12 @@ def generic(w,s,t):
 
 w = matrizPesos()
 
-#Exibir os caminhos do grafos
+#Exibir os caminhos do grafo
 print("\n")
-bellman_ford(w,0)
+if bellman_ford(w,0):
+  print("O Grafo não possui circuito negativo")
+else:
+  print("O Grafo possui circuito negativo")
 
 print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
