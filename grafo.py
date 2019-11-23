@@ -131,21 +131,30 @@ def bellman_ford(w,s):
       if d[v] != math.inf:
         if d[v] > d[u] + w[u,v]:
             return False
-  print(pai)
+  #print(pai)
+
+  print("----------------------------")
+  print("Caminhos a partir do vértice '0' ")
 
   for i in range(1,len(w)):
     aux = pai[i]
     p = []
     p.append(i)
+
     while aux != 0:
       p.append(aux)
       aux = pai[aux]
     p.append(0)
     p = p[::-1]
-    for i in range(len(w)):
-      print(p)
-      print("->")
-  
+    #print(p)
+
+    aux = p
+    for i in range(len(aux)):
+      if i == len(aux)-1:
+        print("{}".format(aux[i]))
+      else:
+        print("{}->".format(aux[i]),end="")
+        
   return True
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -348,17 +357,17 @@ w = matrizPesos()
 print("\n")
 bellman_ford(w,0)
 
-#print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-#print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
-#print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-#floydWarshall(w)
-#mainSTP(w)
-#menorRecSTP(w)
+floydWarshall(w)
+mainSTP(w)
+menorRecSTP(w)
 
-#print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-#print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
-#print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-#fordfulkerson(w,0,5)
-#generic(w,0,5)
+fordfulkerson(w,0,5)
+generic(w,0,5)
