@@ -193,7 +193,67 @@ def bellman_ford(w,s):
 
 
 
+#>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel
+def push(c,f,e,u,v):
+  d = min(e[u],c[u,v]-f[u,v])
+  f[u,v] += d
+  f[v,u] = -f[u,v]
+  e[u] -= d
+  e[v] += d
+  #print(f)
 
+def relabel(c,f,h,u,n,):
+  min_h = h[0]
+
+  for v in range(n):
+    if (c[u,v] - f[u,v]) != 0:
+      if min_h > h[v]:
+        min_h = h[v]
+  h[u] = min_h+1      
+  print(h)
+
+def init(w,s):
+  f = w.copy()
+  c = w.copy()
+  n = len(w)
+  h = [0]*n
+  e = [0]*n
+
+  for i in range(n):
+    for j in range(n):
+      f[i,j] = 0
+      if c[i,j] == math.inf:
+        c[i,j] = 0
+
+  h[s] = n
+  e[s] = math.inf
+  for i in range(n):
+    if c[s,i] != 0:
+      f[s,i] = c[s,i]
+      f[i,s] -= c[s,i]
+      e[i] = c[s,i]
+      e[s] -= c[s,i]
+
+  return e,c,f,h,n
+
+def generic(w,s,t):
+  e,c,f,h,n = init(w,s)
+  for j in range(n):
+    for u in range(n):
+      if e[u]>0 and u!=s and u!=t:
+        relabel(c,f,h,u,n)
+        for v in range(n):
+          if (c[u,v]-f[u,v]) != 0:
+          #print(e)
+          #print(h)
+            #print("{}||{}||{}||{}".format(u,v,h[u],h[v]))
+            if h[u] == h[v] + 1:
+              push(c,f,e,u,v)
+          
+              
+            #print("{}||{}".format(h[u],h[v]))
+  print(f)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 
@@ -212,5 +272,6 @@ print("\n")
 #3-
 #fordfulkerson(w,0,4)
 #print(bellman_ford(w,0))
-menorRecSTP(w)
-mainSTP(w)
+#menorRecSTP(w)
+#mainSTP(w)
+generic(w,0,4)
