@@ -5,7 +5,7 @@ import numpy as np
 #>>>>>>>>>>>>>>>>>>>>Matriz de Pesos<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def matrizPesos():
-  arquivo = open("grafo_youtube.txt","r")    
+  arquivo = open("grafo_exemplo.txt","r")    
   texto = arquivo.readlines()
   arquivo.close()
   nVertices = int(texto[0].split()[0])
@@ -155,6 +155,49 @@ def BP_VISIT(w,i,pai,cor):
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
+def init_single_source(w,s):
+  d = [math.inf]*len(w)
+  pai = [math.inf]*len(w)
+  d[s] = 0
+  return d,pai
+def relax(d,pai,u,v,w):
+  if d[v] > d[u] + w[u,v]:
+    d[v] = d[u] + w[u,v]
+    pai[v] = u
+def bellman_ford(w,s):
+  d,pai = init_single_source(w,s)
+  for i in range(len(w)):
+    for u in range(len(w)):
+      for v in range(len(w)):
+        relax(d,pai,u,v,w)
+  for u in range(len(w)):
+    for v in range(len(w)):
+      if d[v] != math.inf:
+        if d[v] > d[u] + w[u,v]:
+            return False
+  print(pai)
+  for i in range(1,len(w)):
+    aux = pai[i]
+    p = []
+    p.append(i)
+    while aux != 0:
+      p.append(aux)
+      aux = pai[aux]
+    p.append(0)
+    p = p[::-1]
+    print(p)
+  
+  return True
+
+
+
+
+
+
+
+
+
+
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -162,9 +205,10 @@ w = matrizPesos()
 print("\n")
 
 #1-
-floydWarshall(w)
+#floydWarshall(w)
 #2-
-mainSTP(w)
-menorRecSTP(w)
+#mainSTP(w)
 #3-
-fordfulkerson(w,0,5)
+#fordfulkerson(w,0,4)
+print(bellman_ford(w,0))
+
