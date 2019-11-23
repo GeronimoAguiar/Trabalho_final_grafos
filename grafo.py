@@ -1,8 +1,47 @@
+'''
+                    UNIVERSIDADE FEDERAL DO CEARÁ  
+                            CAMPUS SOBRAL
+                  CURSO DE ENGENHARIA DE COMPUTÇÃO
+                TRABALHO FINAL DE ALGORITMOS E GRAFOS
+
+                      SAMUEL HERICLES - 389118
+                      GERÔNIMO AGUIAR - 385145
+                      PEDRO RENOIR    - 389113
+
+    Objetivo -> 
+    
+    Parte 1 ->
+      Implementar os algoritmos de menores caminhos dentre todos os pares de
+    vértices apresentados em sala. Cada algoritmo deve imprimir a matriz de
+    menores caminhos e os menores a partir de vértice fixo fornecido como 
+    entrada. Caso seu grafo tenha circuito negativo, seu algoritmo deverá
+    ser capaz de identificar a sua existência.
+
+    Parte 2 ->
+
+      Considere os seguintes algoritmos para resolver o problema de fluxo
+    máximo:
+
+      • Ford-Fulkerson;
+      • Push–relabel maximum flow algorithm.
+
+      Implemente os algoritmos acima. Utilizando a ideia por trás de cada
+    algoritmo acima, implemente uma forma eficiente, para cada algoritmo, de
+    encontrar o corte mínimo do grafo fornecido. Seu algorítimo deverá 
+    receber um grafo orientado com vértices fonte e sorvedouro explicitados
+    e então retornar a função fluxo máximo para o grafo e as arestas que
+    pertencem ao corte máximo.
+
+'''
+
+# Import da biblioteca math para valor 'infinito'
 import math
+
+# Import da bliblioteca numpy para criar matriz de zeros
 import numpy as np
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>>>>Matriz de Pesos<<<<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>Carregar Matriz de Pesos<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def matrizPesos():
   arquivo = open("grafo_exemplo.txt","r")    
@@ -26,114 +65,20 @@ def matrizPesos():
 
   print(w)
   return w
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>>>>>>Floyed-WarShall<<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-def floydWarshall(w):
-  d = w.copy()
-  n = len(w)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>Busca em profunidade<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  for k in range(n):
-    for i in range(n):
-      for j in range(n):
-        if (d[i,j] > (d[i,k] + d[k,j])):
-          d[i,j] = d[i,k] + d[k,j]
-  print("floydWarshall")
-  print(d)
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+'''
+  Busca em profunidade para usar no algoritmo de ford-
+fulkerson, com ela podemos encontrar os pais do vértice
+raiz e poder realizar a busca pelo o menor caminho.
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>Shortest-Fastest-Path<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-def calcSTP(w,i,j,m):
-  if i == j: return 0
-  if m == 1: return w[i,j]
-  c = math.inf
-  for k in range(len(w)):
-    if c > (calcSTP(w,i,k,m-1) + w[k,j]):
-      c = calcSTP(w,i,k,m-1) + w[k,j]
-  return c
+'''
 
 
-def menorRecSTP(w):
-  l = w.copy()
-  for i in range(len(w)):
-    for j in range(len(w)):
-      l[i,j] = calcSTP(w,i,j,len(w))
-  print("menorRecSTP")
-  print(l)
-
-
-def STP(l, w):
-  nVertices = len(w)
-  l2 = w.copy()
-  for i in range(nVertices):
-    for j in range(nVertices):
-      if i != j:
-        l2[i,j] = math.inf
-      else:
-        l2[i,j] = 0
-  for i in range(nVertices):
-    for j in range(nVertices):
-      c = l[i,j]
-      for k in range(nVertices):
-        if c > (l[i,k] + l[k,j]):
-          c = l[i,k] + l[k,j]
-      l[i,j] = c
-
-  return l    
-
-
-def mainSTP(w):
-  l = w.copy()
-  for i in range(len(w)):
-    l = STP(l,l)
-  print("mainSTP")
-  print(l)
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>>>>>>Ford-Fulkerson<<<<<<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-def fordfulkerson(w,s,t):
-  f = w.copy()
-  p = []
-  fm = 0
-  for i in range(len(w)):
-    for j in range(len(w)):
-      if f[i,j]==math.inf:
-        f[i,j]=0
-  while True:
-    pai = []
-    pai = busca_em_profundidade(f,s)
-    if(pai[t] != math.inf):
-      a = t
-      p = []
-      while(a != s): 
-        p.append(a)
-        a = pai[a]
-      p.append(s)
-      p = p[::-1]
-      print(p)
-      fc = math.inf
-      for i in range(len(p)-1):
-        if fc > f[p[i],p[i+1]]:
-          fc = f[p[i],p[i+1]]
-      fm+=fc
-      for j in range(len(p)-1):
-        f[p[j],p[j+1]]-=fc
-        f[p[j+1],p[j]]+=fc
-    else :
-      break
-  print(fm)
-  print(np.transpose(f))      
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>>>Busca em profunidade<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def busca_em_profundidade(w,s):
   n = len(w)
   a = 0
@@ -144,6 +89,7 @@ def busca_em_profundidade(w,s):
   return pai
 
 def BP_VISIT(w,i,pai,cor):
+  
   n = len(w)
   cor[i] = -1
   for j in range(n):
@@ -153,30 +99,40 @@ def BP_VISIT(w,i,pai,cor):
         BP_VISIT(w,j,pai,cor)
   cor[i] = 1
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>Bellman-Ford<<<<<<<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def init_single_source(w,s):
+
   d = [math.inf]*len(w)
   pai = [math.inf]*len(w)
   d[s] = 0
   return d,pai
+
 def relax(d,pai,u,v,w):
+
   if d[v] > d[u] + w[u,v]:
     d[v] = d[u] + w[u,v]
     pai[v] = u
+
 def bellman_ford(w,s):
+
   d,pai = init_single_source(w,s)
+
   for i in range(len(w)):
     for u in range(len(w)):
       for v in range(len(w)):
         relax(d,pai,u,v,w)
+
   for u in range(len(w)):
     for v in range(len(w)):
       if d[v] != math.inf:
         if d[v] > d[u] + w[u,v]:
             return False
   print(pai)
+
   for i in range(1,len(w)):
     aux = pai[i]
     p = []
@@ -190,17 +146,136 @@ def bellman_ford(w,s):
   
   return True
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>Floyed-WarShall<<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def floydWarshall(w):
+  d = w.copy()
+  n = len(w)
+
+  for k in range(n):
+    for i in range(n):
+      for j in range(n):
+        if (d[i,j] > (d[i,k] + d[k,j])):
+          d[i,j] = d[i,k] + d[k,j]
+
+  print("floydWarshall")
+  print(d)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>Shortest-Fastest-Path<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def calcSTP(w,i,j,m):
+  if i == j: return 0
+  if m == 1: return w[i,j]
+  c = math.inf
+
+  for k in range(len(w)):
+    if c > (calcSTP(w,i,k,m-1) + w[k,j]):
+      c = calcSTP(w,i,k,m-1) + w[k,j]
+
+  return c
 
 
+def menorRecSTP(w):
+  l = w.copy()
 
-#>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel
+  for i in range(len(w)):
+    for j in range(len(w)):
+      l[i,j] = calcSTP(w,i,j,len(w))
+
+  print("menorRecSTP")
+  print(l)
+
+
+def STP(l, w):
+  nVertices = len(w)
+  l2 = w.copy()
+  
+  for i in range(nVertices):
+    for j in range(nVertices):
+      if i != j:
+        l2[i,j] = math.inf
+      else:
+        l2[i,j] = 0
+
+  for i in range(nVertices):
+    for j in range(nVertices):
+      c = l[i,j]
+      for k in range(nVertices):
+        if c > (l[i,k] + l[k,j]):
+          c = l[i,k] + l[k,j]
+      l[i,j] = c
+
+  return l    
+
+
+def mainSTP(w):
+  l = w.copy()
+
+  for i in range(len(w)):
+    l = STP(l,l)
+
+  print("mainSTP")
+  print(l)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>Ford-Fulkerson<<<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def fordfulkerson(w,s,t):
+  f = w.copy()
+  p = []
+  fm = 0
+
+  for i in range(len(w)):
+    for j in range(len(w)):
+      if f[i,j]==math.inf:
+        f[i,j]=0
+
+  while True:
+    pai = []
+    pai = busca_em_profundidade(f,s)
+
+    if(pai[t] != math.inf):
+      a = t
+      p = []
+
+      while(a != s): 
+        p.append(a)
+        a = pai[a]
+      p.append(s)
+      p = p[::-1]
+      print(p)
+      fc = math.inf
+
+      for i in range(len(p)-1):
+        if fc > f[p[i],p[i+1]]:
+          fc = f[p[i],p[i+1]]
+      fm+=fc
+
+      for j in range(len(p)-1):
+        f[p[j],p[j+1]]-=fc
+        f[p[j+1],p[j]]+=fc
+
+    else :
+      break
+  print(fm)
+  print(np.transpose(f))      
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel><<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def push(c,f,e,u,v):
   d = min(e[u],c[u,v]-f[u,v])
   f[u,v] += d
   f[v,u] = -f[u,v]
   e[u] -= d
   e[v] += d
-  #print(f)
 
 def relabel(c,f,h,u,n,):
   min_h = h[0]
@@ -227,6 +302,7 @@ def init(w,s):
 
   h[s] = n
   e[s] = math.inf
+
   for i in range(n):
     if c[s,i] != 0:
       f[s,i] = c[s,i]
@@ -237,41 +313,31 @@ def init(w,s):
   return e,c,f,h,n
 
 def generic(w,s,t):
+
   e,c,f,h,n = init(w,s)
+
   for j in range(n):
     for u in range(n):
       if e[u]>0 and u!=s and u!=t:
         relabel(c,f,h,u,n)
         for v in range(n):
+
           if (c[u,v]-f[u,v]) != 0:
-          #print(e)
-          #print(h)
-            #print("{}||{}||{}||{}".format(u,v,h[u],h[v]))
             if h[u] == h[v] + 1:
               push(c,f,e,u,v)
-          
-              
-            #print("{}||{}".format(h[u],h[v]))
   print(f)
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
-
-
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 w = matrizPesos()
 print("\n")
 
-#1-
-#floydWarshall(w)
-#2-
-#mainSTP(w)
-#3-
-#fordfulkerson(w,0,4)
-#print(bellman_ford(w,0))
-#menorRecSTP(w)
-#mainSTP(w)
+
+floydWarshall(w)
+mainSTP(w)
+menorRecSTP(w)
+
+fordfulkerson(w,0,4)
 generic(w,0,4)
