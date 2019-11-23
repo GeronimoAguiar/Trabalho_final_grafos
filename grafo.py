@@ -5,7 +5,7 @@ import numpy as np
 #>>>>>>>>>>>>>>>>>>>>Matriz de Pesos<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def matrizPesos():
-  arquivo = open("grafo_negativo.txt","r")    
+  arquivo = open("grafo_exemplo.txt","r")    
   texto = arquivo.readlines()
   arquivo.close()
   nVertices = int(texto[0].split()[0])
@@ -167,13 +167,23 @@ def bellman_ford(w,s):
     for u in range(len(w)):
       for v in range(len(w)):
         relax(d,pai,u,v,w)
-  print(d)
-  print(pai)
   for u in range(len(w)):
     for v in range(len(w)):
       if d[v] != math.inf:
         if d[v] > d[u] + w[u,v]:
             return False
+  print(pai)
+  for i in range(1,len(w)):
+    aux = pai[i]
+    p = []
+    p.append(i)
+    while aux != 0:
+      p.append(aux)
+      aux = pai[aux]
+    p.append(0)
+    p = p[::-1]
+    print(p)
+  
   return True
 
 
@@ -194,6 +204,7 @@ print("\n")
 #1-
 #floydWarshall(w)
 #2-
-mainSTP(w)
+#mainSTP(w)
 #3-
 #fordfulkerson(w,0,4)
+print(bellman_ford(w,0))
