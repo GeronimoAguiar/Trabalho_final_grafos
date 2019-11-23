@@ -44,7 +44,7 @@ import numpy as np
 #>>>>>>>>>>>>>>>>>>>>Carregar Matriz de Pesos<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def matrizPesos():
-  arquivo = open("grafo_exemplo.txt","r")    
+  arquivo = open("grafo_wiki.txt","r")    
   texto = arquivo.readlines()
   arquivo.close()
   nVertices = int(texto[0].split()[0])
@@ -63,6 +63,7 @@ def matrizPesos():
     j = i.split()
     w[int(j[0]),int(j[1])] = float(j[2])
 
+  print("\n>>>>>Matriz de Pesos<<<<<\n")
   print(w)
   return w
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -77,7 +78,6 @@ fulkerson, com ela podemos encontrar os pais do vértice
 raiz e poder realizar a busca pelo o menor caminho.
 
 '''
-
 
 def busca_em_profundidade(w,s):
   n = len(w)
@@ -142,7 +142,9 @@ def bellman_ford(w,s):
       aux = pai[aux]
     p.append(0)
     p = p[::-1]
-    print(p)
+    for i in range(len(w)):
+      print(p)
+      print("->")
   
   return True
 
@@ -161,7 +163,7 @@ def floydWarshall(w):
         if (d[i,j] > (d[i,k] + d[k,j])):
           d[i,j] = d[i,k] + d[k,j]
 
-  print("floydWarshall")
+  print("\n>>>>>FloydWarshall<<<<\n")
   print(d)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -187,7 +189,7 @@ def menorRecSTP(w):
     for j in range(len(w)):
       l[i,j] = calcSTP(w,i,j,len(w))
 
-  print("menorRecSTP")
+  print("\n>>>>>menorRecSTP<<<<<\n")
   print(l)
 
 
@@ -219,7 +221,7 @@ def mainSTP(w):
   for i in range(len(w)):
     l = STP(l,l)
 
-  print("mainSTP")
+  print("\n>>>>>mainSTP<<<<<<\n")
   print(l)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -249,7 +251,6 @@ def fordfulkerson(w,s,t):
         a = pai[a]
       p.append(s)
       p = p[::-1]
-      print(p)
       fc = math.inf
 
       for i in range(len(p)-1):
@@ -263,12 +264,14 @@ def fordfulkerson(w,s,t):
 
     else :
       break
-  print(fm)
+
+  print("\n>>>>>>Ford-Fulkerson<<<<<<\n")
+  print("\nFluxo máximo: {}\n".format(fm))
   print(np.transpose(f))      
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel><<<<<<<<<<<<<<<<
+#>>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def push(c,f,e,u,v):
   d = min(e[u],c[u,v]-f[u,v])
@@ -285,7 +288,7 @@ def relabel(c,f,h,u,n,):
       if min_h > h[v]:
         min_h = h[v]
   h[u] = min_h+1      
-  print(h)
+  #print(h)
 
 def init(w,s):
   f = w.copy()
@@ -325,19 +328,37 @@ def generic(w,s,t):
           if (c[u,v]-f[u,v]) != 0:
             if h[u] == h[v] + 1:
               push(c,f,e,u,v)
+
+  max_fluxo = 0
+  for i in range(n):
+    max_fluxo += f[i,t]
+
+  print("\n>>>>>Generic-Push-Relabel<<<<<<\n")
+  print("\nFluxo máximo: {}\n".format(max_fluxo))
   print(f)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 w = matrizPesos()
+
+#Exibir os caminhos do grafos
 print("\n")
+bellman_ford(w,0)
 
+#print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+#print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
+#print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-floydWarshall(w)
-mainSTP(w)
-menorRecSTP(w)
+#floydWarshall(w)
+#mainSTP(w)
+#menorRecSTP(w)
 
-fordfulkerson(w,0,4)
-generic(w,0,4)
+#print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+#print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
+#print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+#fordfulkerson(w,0,5)
+#generic(w,0,5)
