@@ -284,6 +284,18 @@ def floydWarshall(w):
 #>>>>>>>>>>>>>>>>>Shortest-Fastest-Path<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+
+'''
+  @brief   Função para multiplicação das matrizes.
+
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+  @param[in]  i  Vértice de 'inicio' que representa junto com j a aresta (i,j).
+  @param[in]  j  Vértice de 'fim' que representa junto com i a aresta (i,j).
+  @param[in]  m  Número de interações do algortimo.
+
+  return c  Constante que armazena o valor do menor pesos da aresta do caminho
+  de i -> j
+'''
 def calcSTP(w,i,j,m):
   if i == j: return 0
   if m == 1: return w[i,j]
@@ -295,7 +307,16 @@ def calcSTP(w,i,j,m):
 
   return c
 
+'''
+  @brief   Função que calcula o menor caminho de todos os pares de vértices,
+           calcula os pesos de caminhos curtos estendendo os caminhos mais
+           curtos aresta por aresta.
 
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+
+  return l Matriz que de atualização dos pesos das arestas para os
+           menores caminhos.
+'''
 def menorRecSTP(w):
   l = w.copy()
   if bellman_ford(w,0):
@@ -310,6 +331,17 @@ def menorRecSTP(w):
   print("\n>>>>>menorRecSTP<<<<<\n")
   print(l)
 
+
+'''
+  @brief   
+
+  @param[in]  l  Matriz que de atualização dos pesos das arestas
+                 para os menores caminhos.
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+  
+  return l Matriz que de atualização dos pesos das arestas para os
+           menores caminhos.
+'''
 def STP(l, w):
   nVertices = len(w)
   l2 = w.copy()
@@ -331,7 +363,14 @@ def STP(l, w):
 
   return l    
 
+'''
+  @brief   
 
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+
+  return l Matriz que de atualização dos pesos das arestas para os
+           menores caminhos.
+'''
 def mainSTP(w):
 
   if bellman_ford(w,0):
