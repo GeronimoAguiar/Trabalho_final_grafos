@@ -5,7 +5,7 @@ import numpy as np
 #>>>>>>>>>>>>>>>>>>>>Matriz de Pesos<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def matrizPesos():
-  arquivo = open("grafo_exemplo.txt","r")    
+  arquivo = open("grafo_youtube.txt","r")    
   texto = arquivo.readlines()
   arquivo.close()
   nVertices = int(texto[0].split()[0])
@@ -35,13 +35,14 @@ def floydWarshall(w):
   d = w.copy()
   n = len(w)
 
-  for k in range(n):
-    for i in range(n):
-      for j in range(n):
-        if (d[i,j] > (d[i,k] + d[k,j])):
-          d[i,j] = d[i,k] + d[k,j]
   print("floydWarshall")
-  print(d)
+  if bellman_ford(w,0):
+    for k in range(n):
+      for i in range(n):
+        for j in range(n):
+          if (d[i,j] > (d[i,k] + d[k,j])):
+            d[i,j] = d[i,k] + d[k,j]
+    print(d)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -59,11 +60,12 @@ def calcSTP(w,i,j,m):
 
 def menorRecSTP(w):
   l = w.copy()
-  for i in range(len(w)):
-    for j in range(len(w)):
-      l[i,j] = calcSTP(w,i,j,len(w))
   print("menorRecSTP")
-  print(l)
+  if bellman_ford(w,0):
+    for i in range(len(w)):
+      for j in range(len(w)):
+        l[i,j] = calcSTP(w,i,j,len(w))
+    print(l)
 
 
 def STP(l, w):
@@ -87,11 +89,12 @@ def STP(l, w):
 
 
 def mainSTP(w):
-  l = w.copy()
-  for i in range(len(w)):
-    l = STP(l,l)
   print("mainSTP")
-  print(l)
+  if bellman_ford(w,0):
+    l = w.copy()
+    for i in range(len(w)):
+      l = STP(l,l)
+    print(l)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -101,6 +104,7 @@ def fordfulkerson(w,s,t):
   f = w.copy()
   p = []
   fm = 0
+  print("Ford-Fulkerson")
   for i in range(len(w)):
     for j in range(len(w)):
       if f[i,j]==math.inf:
@@ -127,8 +131,8 @@ def fordfulkerson(w,s,t):
         f[p[j+1],p[j]]+=fc
     else :
       break
-  print(fm)
-  print(np.transpose(f))      
+  print("\nFluxo máximo: {}".format(fm))
+  print(f)      
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -176,7 +180,6 @@ def bellman_ford(w,s):
       if d[v] != math.inf:
         if d[v] > d[u] + w[u,v]:
             return False
-  print(pai)
   for i in range(1,len(w)):
     aux = pai[i]
     p = []
@@ -187,17 +190,9 @@ def bellman_ford(w,s):
     p.append(0)
     p = p[::-1]
     print(p)
+  print("\n")
   
   return True
-
-
-
-
-
-
-
-
-
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
@@ -205,12 +200,11 @@ def bellman_ford(w,s):
 w = matrizPesos()
 print("\n")
 
-#1-
 #floydWarshall(w)
-#2-
+#print("\n")
+#menorRecSTP(w)
+#print("\n")
 #mainSTP(w)
-#3-
-#fordfulkerson(w,0,4)
-#print(bellman_ford(w,0))
-menorRecSTP(w)
-mainSTP(w)
+#print("\n")
+fordfulkerson(w,0,5)
+print("\n")
