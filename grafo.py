@@ -1,12 +1,12 @@
 '''
                     UNIVERSIDADE FEDERAL DO CEARÁ  
                             CAMPUS SOBRAL
-                  CURSO DE ENGENHARIA DE COMPUTÇÃO
+                  CURSO DE ENGENHARIA DE COMPUTAÇÃO
                 TRABALHO FINAL DE ALGORITMOS E GRAFOS
 
-                      SAMUEL HERICLES - 389118
-                      GERÔNIMO AGUIAR - 385145
-                      PEDRO RENOIR    - 389113
+                    SAMUEL HERICLES - 389118
+                    GERÔNIMO AGUIAR - 385145
+                    PEDRO RENOIR    - 389113
    
   Parte 1 -> Algoritmos de caminhos mínimos para todos os vértices
 
@@ -39,6 +39,7 @@ import math
 # Import da bliblioteca numpy para criar matriz de zeros
 import numpy as np
 
+
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>Carregar Matriz de Pesos<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -66,12 +67,10 @@ import numpy as np
 '''
 
 def matrizPesos():
-<<<<<<< HEAD
-  arquivo = open("grafo_youtube.txt","r")    
-=======
+
   # Carrega o arquivo localizado na pasta 'exemplo_de_grafos'
   arquivo = open("exemplo_de_grafos/grafo_youtube.txt","r")    
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+
   texto = arquivo.readlines()
   arquivo.close()
 
@@ -154,6 +153,18 @@ def BP_VISIT(w,i,pai,cor):
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>Bellman-Ford<<<<<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+'''
+  @brief  Função que cria o vetor de descendência 'pai' para armazenar os filhos
+          vértice raiz e o vetor 'd' que armazena os pesos das arestas.
+
+  @param[in] w   Matriz de pesos que representa o grafo direcionado.
+  @param[in] s   Vértice raiz.
+
+  return pai  Vetor de descendência do vértice 's' até o ultimo ou mais profundo.
+  return  d   Vetor de peso dos vértices que auxilía na procura de circuitos negativos.
+  
+'''
 def init_single_source(w,s):
 
   d = [math.inf]*len(w)
@@ -161,12 +172,35 @@ def init_single_source(w,s):
   d[s] = 0
   return d,pai
 
+
+'''
+  @brief  Função que aplica o relaxamento dos vértices no algoritmo de bellman-ford.
+
+  @param[in]  d    Vetor de peso dos vértices que auxilía na procura de circuitos negativos.
+  @param[in] pai   Vetor de descendência do vértice 's' até o ultimo ou mais profundo.
+  @param[in]  u    Vértice de 'inicio' para reprensentar a aresta (u,v)
+  @param[in]  v    Vértice de 'fim' para representar a aresta (u,v)
+  @param[in]  w    Matriz de pesos que representa o grafo direcionado.
+
+  
+'''
 def relax(d,pai,u,v,w):
 
   if d[v] > d[u] + w[u,v]:
     d[v] = d[u] + w[u,v]
     pai[v] = u
 
+'''
+  @brief  Algoritmo de Bellman-Ford para busca de menor caminho a partir de um grafos com pesos
+          negativos ou positivos. Caso haja circutos negativos, o procedimento eh capaz de noti-
+          ficar.
+
+  @param[in]  w    Matriz de pesos que representa o grafo direcionado.
+  @param[in]  s   Vértice raiz.
+
+  return Booleano 'True' para caso o algoritmo não possua ciclo negativo.
+                  'False' para caso o algoritmos possua ciclo negativo.
+'''
 def bellman_ford(w,s):
 
   d,pai = init_single_source(w,s)
@@ -181,7 +215,6 @@ def bellman_ford(w,s):
       if d[v] != math.inf:
         if d[v] > d[u] + w[u,v]:
             return False
-  #print(pai)
 
   print("----------------------------")
   print("Caminhos a partir do vértice '0' ")
@@ -195,9 +228,8 @@ def bellman_ford(w,s):
       p.append(aux)
       aux = pai[aux]
     p.append(0)
-    p = p[::-1]
-    #print(p)
-
+    p = p[::-1] 
+    
     aux = p
     for i in range(len(aux)):
       if i == len(aux)-1:
@@ -209,24 +241,33 @@ def bellman_ford(w,s):
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+'''
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+||||||||| ALGORITMOS DE CAMINHOS MINIMOS PARA |||||||||||
+||||||||||   TODOS OS PARES DE VÉRTICES |||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+'''
+
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>>>Floyed-WarShall<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+'''
+
+  @brief  Algoritmo que resolve o problema de calcular o
+          caminho mais curto entre todos os pares de vértices
+          em um grafo orientado (com direção) e valorado (com
+          peso). 
+
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+
+  return d A matriz de menores distância para todos os pares
+           de vértices.
+'''
 def floydWarshall(w):
   d = w.copy()
   n = len(w)
 
-<<<<<<< HEAD
-  print("floydWarshall")
-  if bellman_ford(w,0):
-    for k in range(n):
-      for i in range(n):
-        for j in range(n):
-          if (d[i,j] > (d[i,k] + d[k,j])):
-            d[i,j] = d[i,k] + d[k,j]
-    print(d)
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-=======
   for k in range(n):
     for i in range(n):
       for j in range(n):
@@ -236,11 +277,13 @@ def floydWarshall(w):
   print("\n>>>>>FloydWarshall<<<<\n")
   print(d)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>Shortest-Fastest-Path<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 def calcSTP(w,i,j,m):
   if i == j: return 0
   if m == 1: return w[i,j]
@@ -255,14 +298,10 @@ def calcSTP(w,i,j,m):
 
 def menorRecSTP(w):
   l = w.copy()
-<<<<<<< HEAD
-  print("menorRecSTP")
   if bellman_ford(w,0):
     for i in range(len(w)):
       for j in range(len(w)):
         l[i,j] = calcSTP(w,i,j,len(w))
-    print(l)
-=======
 
   for i in range(len(w)):
     for j in range(len(w)):
@@ -270,8 +309,6 @@ def menorRecSTP(w):
 
   print("\n>>>>>menorRecSTP<<<<<\n")
   print(l)
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
-
 
 def STP(l, w):
   nVertices = len(w)
@@ -296,15 +333,13 @@ def STP(l, w):
 
 
 def mainSTP(w):
-<<<<<<< HEAD
-  print("mainSTP")
+
   if bellman_ford(w,0):
     l = w.copy()
     for i in range(len(w)):
       l = STP(l,l)
     print(l)
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-=======
+
   l = w.copy()
 
   for i in range(len(w)):
@@ -313,20 +348,37 @@ def mainSTP(w):
   print("\n>>>>>mainSTP<<<<<<\n")
   print(l)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+
+'''
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||| ALGORITMOS DE FLUXO MÁXIMO ||||||||||||||||
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+'''
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>>>Ford-Fulkerson<<<<<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+'''
+  @brief   Algoritmo utilizado para resolver problemas de 
+           fluxo em rede (network flow). O algoritmo é empregado 
+           quando se deseja encontrar um fluxo de valor máximo 
+           que faça o melhor uso possível das capacidades
+           disponíveis na rede em questão.
+
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+  @param[in]  s  Vértice que simboliza a fonte do fluxo.
+  @param[in]  t  Vértice que simboliza o sorverdouro do fluxo.
+
+  return f    A matriz que representa os pesos das arestas e a orientação
+              delas no grafo de fluxo.
+  return fm   Variavel que armazena o fluxo máximo do grafo.
+'''
 def fordfulkerson(w,s,t):
   f = w.copy()
   p = []
   fm = 0
-<<<<<<< HEAD
-  print("Ford-Fulkerson")
-=======
 
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
   for i in range(len(w)):
     for j in range(len(w)):
       if f[i,j]==math.inf:
@@ -358,21 +410,28 @@ def fordfulkerson(w,s,t):
 
     else :
       break
-<<<<<<< HEAD
-  print("\nFluxo máximo: {}".format(fm))
-  print(f)      
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-=======
 
   print("\n>>>>>>Ford-Fulkerson<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(fm))
   print(np.transpose(f))      
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>Generic-Push-Relabel<<<<<<<<<<<<<<<<<
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+'''
+  @brief   A operação push se aplica uma aresta (u,v) de um
+           vétice u em w. Move min {e[u], c[u,v] - f[u,v]}
+           unidades de fluxo de u para v.
+
+  @param[in]  c  Matriz de capacidade do grafo.
+  @param[in]  f  Matriz de fluxo do grafo.
+  @param[in]  e  Vetor de excesso dos vértices.
+  @param[in]  u  Vértice de 'inicio' que representa junto com v uma aresta (u,v).
+  @param[in]  v  Vértice de 'fim' que representa junto com u uma aresta (u,v).
+'''
 def push(c,f,e,u,v):
   d = min(e[u],c[u,v]-f[u,v])
   f[u,v] += d
@@ -380,7 +439,21 @@ def push(c,f,e,u,v):
   e[u] -= d
   e[v] += d
 
-def relabel(c,f,h,u,n,):
+'''
+  @brief   A operação de relabel se aplica a um vértice u, 
+           sem quaisquer arestas admissíveis em w. Ele modifica h[u]
+           para ser o valor mínimo tal que uma aresta admissíveis é
+           criada. Observe que isso sempre aumenta h[u] e nunca cria
+           uma aresta 'ingreme', que é uma aresta [u,v] tal que c[u,v]>0
+           e h[u]>h[v]+1.
+
+  @param[in]  c  Matriz de capacidade do grafo.
+  @param[in]  f  Matriz de fluxo do grafo.
+  @param[in]  h  Vetor de altura do vértices.
+  @param[in]  u  Vértice de 'inicio' que representa junto com v uma aresta (u,v).
+  @param[in]  n  Número de vértice do grafo.
+'''
+def relabel(c,f,h,u,n):
   min_h = h[0]
 
   for v in range(n):
@@ -388,8 +461,21 @@ def relabel(c,f,h,u,n,):
       if min_h > h[v]:
         min_h = h[v]
   h[u] = min_h+1      
-  #print(h)
 
+
+'''
+  @brief  O algoritmo genérico de push-relabel utiliza a sub-rotina a seguir
+          para criar um pré-fluxo inicial no fluxo em rede.
+
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+  @param[in]  s  Vértice que simboliza a fonte do fluxo.
+
+  return  c  Matriz de capacidade do grafo.
+  return  f  Matriz de fluxo do grafo.
+  return  e  Vetor de excesso dos vértices.
+  return  h  Vetor de altura do vértices.
+  return  n  Número de vértice do grafo.
+'''
 def init(w,s):
   f = w.copy()
   c = w.copy()
@@ -403,45 +489,6 @@ def init(w,s):
       if c[i,j] == math.inf:
         c[i,j] = 0
 
-<<<<<<< HEAD
-def init_single_source(w,s):
-  d = [math.inf]*len(w)
-  pai = [math.inf]*len(w)
-  d[s] = 0
-  return d,pai
-def relax(d,pai,u,v,w):
-  if d[v] > d[u] + w[u,v]:
-    d[v] = d[u] + w[u,v]
-    pai[v] = u
-def bellman_ford(w,s):
-  d,pai = init_single_source(w,s)
-  for i in range(len(w)):
-    for u in range(len(w)):
-      for v in range(len(w)):
-        relax(d,pai,u,v,w)
-  for u in range(len(w)):
-    for v in range(len(w)):
-      if d[v] != math.inf:
-        if d[v] > d[u] + w[u,v]:
-            return False
-  for i in range(1,len(w)):
-    aux = pai[i]
-    p = []
-    p.append(i)
-    while aux != 0:
-      p.append(aux)
-      aux = pai[aux]
-    p.append(0)
-    p = p[::-1]
-    print(p)
-  print("\n")
-  
-  return True
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-=======
   h[s] = n
   e[s] = math.inf
 
@@ -454,7 +501,23 @@ def bellman_ford(w,s):
 
   return e,c,f,h,n
 
-def generic(w,s,t):
+'''
+  @brief   Algoritmo para calcular fluxos máximos em uma rede de fluxo.
+           O nome "push-relabel" vem das duas operações básicas usadas 
+           no algoritmo. Ao longo de sua execução, o algoritmo mantém um 
+           "pré-fluxo" e gradualmente o converte em um fluxo máximo, movendo 
+           o fluxo localmente entre nós vizinhos, usando operações push, sob 
+           a orientação de uma rede admissível mantida por operações de remarcação.
+
+  @param[in]  w  Matriz de pesos que representa o grafo direcionado.
+  @param[in]  s  Vértice que simboliza a fonte do fluxo.
+  @param[in]  t  Vértice que simboliza o sorvedouro do fluxo.
+  
+  return f           A matriz que representa os pesos das arestas e a orientação
+                     delas no grafo de fluxo.
+  return max_fluxo   Variavel que armazena o fluxo máximo do grafo.
+'''
+def generic_pushRelabel(w,s,t):
 
   e,c,f,h,n = init(w,s)
 
@@ -477,11 +540,13 @@ def generic(w,s,t):
   print(f)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#>>>>>>>>>>>>>>>>>Função Principal<<<<<<<<<<<<<<<<<<<<<<<<
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+'''
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||| FUNÇÃO PRINCIPAL ||||||||||||||||||||||
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+'''
 
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+#Armazenar a matriz de pesos e orientação do grafo
 w = matrizPesos()
 
 #Exibir os caminhos do grafo
@@ -491,20 +556,11 @@ if bellman_ford(w,0):
 else:
   print("O Grafo possui circuito negativo")
 
+
 print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
 print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-<<<<<<< HEAD
-#floydWarshall(w)
-#print("\n")
-#menorRecSTP(w)
-#print("\n")
-#mainSTP(w)
-#print("\n")
-fordfulkerson(w,0,5)
-print("\n")
-=======
 floydWarshall(w)
 mainSTP(w)
 menorRecSTP(w)
@@ -514,5 +570,6 @@ print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
 print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
 fordfulkerson(w,0,5)
-generic(w,0,5)
->>>>>>> b4e2bf5db931a6c9dddda08f931c3567c0ae7c77
+generic_pushRelabel(w,0,5)
+
+print("\n")
