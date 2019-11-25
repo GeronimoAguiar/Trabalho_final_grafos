@@ -69,7 +69,7 @@ import numpy as np
 def matrizPesos():
 
   # Carrega o arquivo localizado na pasta 'exemplo_de_grafos'
-  arquivo = open("exemplo_de_grafos/grafo_youtube.txt","r")    
+  arquivo = open("exemplo_de_grafos/grafo_tcc.txt","r")    
 
   texto = arquivo.readlines()
   arquivo.close()
@@ -77,6 +77,8 @@ def matrizPesos():
   # Trata os dados do arquivos
   nVertices = int(texto[0].split()[0])
   vPai = int(texto[1].split()[0])
+
+
 
   arestas = texto[2:]
   nArestas = len(arestas)
@@ -91,9 +93,11 @@ def matrizPesos():
     j = i.split()
     w[int(j[0]),int(j[1])] = float(j[2])
 
-  print("\n>>>>>Matriz de Pesos<<<<<\n")
-  print(w)
-  return w
+  try:
+      vSorv = int(texto[1].split()[1])
+      return w,vPai,vSorv,nVertices
+  except IndexError: 
+      return w,vPai,nVertices
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -217,25 +221,25 @@ def bellman_ford(w,s):
             return False
 
   print("----------------------------")
-  print("Caminhos a partir do vértice '0' ")
+  print("Caminhos a partir do vértice '{}' ".format(s))
+ 
+  for i in range(len(w)):
+    if i!=s and pai[i] != math.inf:
+      aux = pai[i]
+      p = []
+      p.append(i)
 
-  for i in range(1,len(w)):
-    aux = pai[i]
-    p = []
-    p.append(i)
-
-    while aux != 0:
-      p.append(aux)
-      aux = pai[aux]
-    p.append(0)
-    p = p[::-1] 
-    
-    aux = p
-    for i in range(len(aux)):
-      if i == len(aux)-1:
-        print("{}".format(aux[i]))
-      else:
-        print("{}->".format(aux[i]),end="")
+      while aux != s:
+        p.append(aux)
+        aux = pai[aux]
+      p.append(s)
+      p = p[::-1] 
+      aux = p
+      for i in range(len(aux)):
+        if i == len(aux)-1:
+          print("{}".format(aux[i]))
+        else:
+          print("{}->".format(aux[i]),end="")
         
   return True
 
@@ -319,10 +323,10 @@ def calcSTP(w,i,j,m):
 '''
 def menorRecSTP(w):
   l = w.copy()
-  if bellman_ford(w,0):
-    for i in range(len(w)):
-      for j in range(len(w)):
-        l[i,j] = calcSTP(w,i,j,len(w))
+
+  for i in range(len(w)):
+    for j in range(len(w)):
+      l[i,j] = calcSTP(w,i,j,len(w))
 
   for i in range(len(w)):
     for j in range(len(w)):
@@ -373,11 +377,9 @@ def STP(l, w):
 '''
 def mainSTP(w):
 
-  if bellman_ford(w,0):
-    l = w.copy()
-    for i in range(len(w)):
-      l = STP(l,l)
-    print(l)
+  l = w.copy()
+  for i in range(len(w)):
+    l = STP(l,l)
 
   l = w.copy()
 
@@ -474,7 +476,7 @@ def fordfulkerson(w,s,t):
 def push(c,f,e,u,v):
   d = min(e[u],c[u,v]-f[u,v])
   f[u,v] += d
-  f[v,u] = -f[u,v]
+  f[v,u] -= d
   e[u] -= d
   e[v] += d
 
@@ -493,10 +495,10 @@ def push(c,f,e,u,v):
   @param[in]  n  Número de vértice do grafo.
 '''
 def relabel(c,f,h,u,n):
-  min_h = h[0]
+  min_h = math.inf
 
   for v in range(n):
-    if (c[u,v] - f[u,v]) != 0:
+    if (c[u,v] - f[u,v]) > 0:
       if min_h > h[v]:
         min_h = h[v]
   h[u] = min_h+1      
@@ -559,8 +561,7 @@ def init(w,s):
 def generic_pushRelabel(w,s,t):
 
   e,c,f,h,n = init(w,s)
-
-  for j in range(n):
+  for j in range(n*n):
     for u in range(n):
       if e[u]>0 and u!=s and u!=t:
         relabel(c,f,h,u,n)
@@ -573,10 +574,11 @@ def generic_pushRelabel(w,s,t):
   max_fluxo = 0
   for i in range(n):
     max_fluxo += f[i,t]
-
+  m = f.copy()
   print("\n>>>>>Generic-Push-Relabel<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(max_fluxo))
   print(f)
+  print(e)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 '''
@@ -586,29 +588,44 @@ def generic_pushRelabel(w,s,t):
 '''
 
 #Armazenar a matriz de pesos e orientação do grafo
-w = matrizPesos()
 
-#Exibir os caminhos do grafo
+try:
+  w,vPai,vSorv,nVertices = matrizPesos()
+  print(">>>>>>>Matriz de Pesos<<<<<<<<")
+  print("\nNúmero de vértices-> {}".format(nVertices))
+  print("Vértice fonte-> {}".format(vPai))
+  print("Vértice soverdouro-> {}\n".format(vSorv))
+  print(w)
+  
+  print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+  print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
+  print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+  fordfulkerson(w,vPai,vSorv)
+  generic_pushRelabel(w,vPai,vSorv)
+
+except:
+  w,vPai,nVertices = matrizPesos()
+  print(">>>>>>>Matriz de Pesos<<<<<<<<")
+  print("\nNúmero de vértices-> {}".format(nVertices))
+  print("Vértice raiz-> {}\n".format(vPai))
+  
+  print(w)  
+  
+  if bellman_ford(w,vPai):
+    print("O Grafo não possui circuito negativo")
+
+    print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    floydWarshall(w)
+    mainSTP(w)
+    menorRecSTP(w)
+
+  else:
+    print("O Grafo possui circuito negativo")
+
+
 print("\n")
-if bellman_ford(w,0):
-  print("O Grafo não possui circuito negativo")
-else:
-  print("O Grafo possui circuito negativo")
 
-
-print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
-print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-floydWarshall(w)
-mainSTP(w)
-menorRecSTP(w)
-
-print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-print(">>>>>>>>> ALGORITMOS DE FLUXO MÁXIMO <<<<<<<<<<<<<<")
-print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-fordfulkerson(w,0,5)
-generic_pushRelabel(w,0,5)
-
-print("\n")
