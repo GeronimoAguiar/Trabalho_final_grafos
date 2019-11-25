@@ -578,7 +578,6 @@ def generic_pushRelabel(w,s,t):
   print("\n>>>>>Generic-Push-Relabel<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(max_fluxo))
   print(f)
-  print(e)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 '''
