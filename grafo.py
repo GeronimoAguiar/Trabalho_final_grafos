@@ -577,7 +577,10 @@ def generic_pushRelabel(w,s,t):
   m = f.copy()
   print("\n>>>>>Generic-Push-Relabel<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(max_fluxo))
+  print("Matriz de fluxo máximo")
   print(f)
+  print("\nMatriz de grafo residual")
+  print(c - f)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 '''
