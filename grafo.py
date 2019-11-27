@@ -69,7 +69,7 @@ import numpy as np
 def matrizPesos():
 
   # Carrega o arquivo localizado na pasta 'exemplo_de_grafos'
-  arquivo = open("exemplo_de_grafos/grafo_tcc.txt","r")    
+  arquivo = open("exemplo_de_grafos/grafo_youtube.txt","r")    
 
   texto = arquivo.readlines()
   arquivo.close()
@@ -417,6 +417,7 @@ def mainSTP(w):
 '''
 def fordfulkerson(w,s,t):
   f = w.copy()
+  c = w.copy()
   p = []
   fm = 0
 
@@ -424,6 +425,7 @@ def fordfulkerson(w,s,t):
     for j in range(len(w)):
       if f[i,j]==math.inf:
         f[i,j]=0
+        c[i,j] = 0
 
   while True:
     pai = []
@@ -454,7 +456,11 @@ def fordfulkerson(w,s,t):
 
   print("\n>>>>>>Ford-Fulkerson<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(fm))
+  print("\nMatriz de fluxo máximo:")
   print(np.transpose(f))      
+  print("\nMatriz de grafo residual:")
+  print(c - np.transpose(f))      
+  
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -577,9 +583,9 @@ def generic_pushRelabel(w,s,t):
   m = f.copy()
   print("\n>>>>>Generic-Push-Relabel<<<<<<\n")
   print("\nFluxo máximo: {}\n".format(max_fluxo))
-  print("Matriz de fluxo máximo")
+  print("Matriz de fluxo máximo:")
   print(f)
-  print("\nMatriz de grafo residual")
+  print("\nMatriz de grafo residual:")
   print(c - f)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
