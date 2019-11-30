@@ -69,7 +69,7 @@ import numpy as np
 def matrizPesos():
 
   # Carrega o arquivo localizado na pasta 'exemplo_de_grafos'
-  arquivo = open("exemplo_de_grafos/grafo_youtube.txt","r")    
+  arquivo = open("exemplo_de_grafos/grafo_exemplo_01.txt","r")    
 
   texto = arquivo.readlines()
   arquivo.close()
@@ -358,8 +358,6 @@ def Shortest_Path(l, w):
         l2[i,j] = 0
 
   for i in range(nVertices):
-    print(i)
-    print(l)
     for j in range(nVertices):
       c = l[i,j]
       for k in range(nVertices):
@@ -629,9 +627,9 @@ except:
     print("> ALGORITMOS DE CAMINHOS MÍNIMOS PARA VÁRIOS VÉRTICES <")
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-    #floydWarshall(w)
+    floydWarshall(w)
     Shortest_Path_Main(w)
-    #menorRecSTP(w)
+    menorRecSTP(w)
 
   else:
     print("O Grafo possui circuito negativo")
