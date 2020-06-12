@@ -15,7 +15,7 @@ todos esses algoritmo estão explicados o seu funcionamento e definição no arq
 # Depedências
 
 * Python3 ou superior;
-* Numpy 1.1 ou superior;
+* Numpy 1.1 ou superior.
 
 # Guia de instalação
 1.Instalar o gerenciador de pacotes do python3 (pip), segue o link abaixo:
@@ -39,7 +39,7 @@ todos esses algoritmo estão explicados o seu funcionamento e definição no arq
 
 # Licensa
 
-Código aberto, pois é apenas para fiz educacionais.
+Código aberto, pois é apenas para fins educacionais.
 
 # Autores
 
