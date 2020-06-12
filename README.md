@@ -37,7 +37,7 @@ todos esses algoritmo estão explicados o seu funcionamento e definição no arq
 
 6.Caso tenham dois valores a saída seram o fluxo máximo de "s" até "t" e as respectivas matrizes de fluxo obtidas por cada algoritmo.
 
-# Licensa
+# Licença
 
 Código aberto, pois é apenas para fins educacionais.
 
